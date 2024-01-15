@@ -114,11 +114,15 @@ export type Theme = {
 export type ShadersFactory = () => Theme;
 
 export type ShaderPlugin = (
-  shaderFactor: ShadersFactory,
-  config?: ShaderPluginConfig
+  config: ShaderPluginConfig
 ) => ReturnType<typeof plugin>;
 
 export type ShaderPluginConfig = {
+  /**
+   * @default "@radix-ui/colors
+   **/
+  shader?: ShadersFactory;
+
   /**
    * @default false
    * @description If true, will remove tailwind's default colors.
@@ -127,9 +131,7 @@ export type ShaderPluginConfig = {
 
   /**
    * @default true
-   * @description If true, will create tailwind colors from the shader's colors.
-   *
-   * @example a base color of red will create a tailwind colors of red-{1-12}
+   * @description If true, will create tailwind color classes from the shader's colors.
    */
-  createTailwindColors?: boolean;
+  createShaderClasses?: boolean;
 };

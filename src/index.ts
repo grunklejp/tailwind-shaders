@@ -1,5 +1,6 @@
 import plugin from "tailwindcss/plugin";
 import { Shade, ShaderPlugin, Theme } from "./types";
+import { radixColors } from "./themes/radix-colors";
 
 const useCases = [
   "Background for apps",
@@ -16,12 +17,12 @@ const useCases = [
   "High-contrast text",
 ];
 
-export const shaders: ShaderPlugin = (factory, config) => {
-  const createTailwindColors = config?.createTailwindColors ?? true;
+export const shaders: ShaderPlugin = (config) => {
+  const createTailwindColors = config?.createShaderClasses ?? true;
   const removeTailwindDefaultColors =
     config?.removeTailwindDefaultColors ?? false;
 
-  const theme = factory();
+  const theme = config.shader ? config.shader() : radixColors();
 
   const twColors = createTailwindColors
     ? toTailwindColors(theme, removeTailwindDefaultColors)
@@ -150,14 +151,16 @@ export const shaders: ShaderPlugin = (factory, config) => {
         ...themes,
       });
 
-      // Create an inverted variant
-      addVariant("flip", ".flip &");
+      // Create an inverted variant that works on children and same-level elements
+      addVariant("flip", [".flip &", "&.flip"]);
     },
     {
       theme: {
         colors:
           removeTailwindDefaultColors && createTailwindColors
             ? {
+                transparent: "transparent",
+                current: "currentColor",
                 ...baseVars,
                 ...twColors,
               }
@@ -170,9 +173,6 @@ export const shaders: ShaderPlugin = (factory, config) => {
                   ...twColors,
                 }
               : undefined,
-          backgroundColor: ({ theme }) => ({
-            ...theme("colors"),
-          }),
         },
       },
     }
@@ -220,5 +220,5 @@ function toTailwindColors(theme: Theme, replace: boolean = false) {
 }
 
 function annotate(val: string, comment: string) {
-  return `${val} // ${comment}`;
+  return `${val} /* ${comment} */`;
 }
