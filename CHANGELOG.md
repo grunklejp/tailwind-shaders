@@ -1,5 +1,11 @@
 # tailwind-shaders
 
+## 0.2.0
+
+### Minor Changes
+
+- f38eedc: use radix as default color scheme
+
 ## 0.1.0
 
 ### Minor Changes
