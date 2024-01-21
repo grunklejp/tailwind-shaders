@@ -1,6 +1,7 @@
 import plugin from "tailwindcss/plugin";
 import { Shade, ShaderPlugin, Theme } from "./types";
 import { radixColors } from "./themes/radix-colors";
+// import { RGB, RGBA } from "./utils";
 
 const useCases = [
   "Background for apps",
@@ -222,3 +223,20 @@ function toTailwindColors(theme: Theme, replace: boolean = false) {
 function annotate(val: string, comment: string) {
   return `${val} /* ${comment} */`;
 }
+
+/**
+ * In order for tailwind opacity to work for colors, we need to convert the color to a R, B, G
+ */
+// function toTailwindAlphaSafeColor(color: string): RGB | RGBA {
+//   if (color.startsWith("#")) {
+//     const expanded = expandHex(color);
+
+//     if (isHexNonAlphaColor(color)) {
+//       return hexToRGB(color);
+//     }
+
+//     if (isHexAlphaColor(color)) {
+//       return hexToRGBA(color);
+//     }
+//   }
+// }
