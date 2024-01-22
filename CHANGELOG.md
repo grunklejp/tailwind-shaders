@@ -1,5 +1,11 @@
 # tailwind-shaders
 
+## 0.2.1
+
+### Patch Changes
+
+- 3f8dd6a: Add hook
+
 ## 0.2.0
 
 ### Minor Changes
