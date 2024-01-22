@@ -130,8 +130,9 @@ export type ShaderPluginConfig = {
   removeTailwindDefaultColors?: boolean;
 
   /**
+   * TODO: rename to createColorClasses
    * @default true
-   * @description If true, will create tailwind color classes from the shader's colors.
+   * @description If true, will create tailwind color classes from the all shader colors.
    */
   createShaderClasses?: boolean;
 };

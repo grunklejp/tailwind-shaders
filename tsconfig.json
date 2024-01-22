@@ -9,6 +9,6 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
-    "lib": ["es2017"]
+    "lib": ["es2017", "DOM"]
   }
 }

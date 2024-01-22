@@ -20,14 +20,10 @@ const useCases = [
 
 export const shaders: ShaderPlugin = (config) => {
   const createTailwindColors = config?.createShaderClasses ?? true;
-  const removeTailwindDefaultColors =
-    config?.removeTailwindDefaultColors ?? false;
 
   const theme = config.shader ? config.shader() : radixColors();
 
-  const twColors = createTailwindColors
-    ? toTailwindColors(theme, removeTailwindDefaultColors)
-    : {};
+  const twColors = createTailwindColors ? toTailwindColors(theme) : {};
 
   const lightGrayColorVars = Object.entries(theme.neutralGray).reduce(
     (acc: Record<`--grayscale-${number}`, string>, [key, value]) => {
@@ -74,22 +70,22 @@ export const shaders: ShaderPlugin = (config) => {
         value.darkAlphaSaturated;
     }
 
-    themes[`.theme-${shade}`] = {
+    themes[`.shader-${shade}`] = {
       ...lightColorsValues,
       ...lightGrayColorVars,
     };
 
-    themes[`.theme-${shade}-saturated`] = {
+    themes[`.shader-${shade}-saturated`] = {
       ...lightColorsValues,
       ...saturatedGrayColorVars,
     };
 
-    themes[`.theme-dark-${shade}`] = {
+    themes[`.shader-dark-${shade}`] = {
       ...darkColorsValues,
       ...darkGrayColorVars,
     };
 
-    themes[`.theme-dark-${shade}-saturated`] = {
+    themes[`.shader-dark-${shade}-saturated`] = {
       ...darkColorsValues,
       ...saturatedDarkGrayColorVars,
     };
@@ -157,30 +153,18 @@ export const shaders: ShaderPlugin = (config) => {
     },
     {
       theme: {
-        colors:
-          removeTailwindDefaultColors && createTailwindColors
-            ? {
-                transparent: "transparent",
-                current: "currentColor",
-                ...baseVars,
-                ...twColors,
-              }
-            : undefined,
         extend: {
-          colors:
-            !removeTailwindDefaultColors && createTailwindColors
-              ? {
-                  ...baseVars,
-                  ...twColors,
-                }
-              : undefined,
+          colors: {
+            ...baseVars,
+            ...(createTailwindColors ? twColors : {}),
+          },
         },
       },
     }
   );
 };
 
-function toTailwindColors(theme: Theme, replace: boolean = false) {
+function toTailwindColors(theme: Theme) {
   // note: we use callbacks as values here to ignore the opacity value that tailwind adds to each color
   // https://www.youtube.com/watch?v=MAtaT8BZEAo
   const colors: Record<string, (arg: string) => string> = {};
@@ -206,15 +190,6 @@ function toTailwindColors(theme: Theme, replace: boolean = false) {
     colors[`gray-${shade}a`] = () => value.alphaBase;
     colors[`dark-gray-${shade}`] = () => annotate(value.dark, useCase);
     colors[`dark-gray-${shade}a`] = () => value.alphaDark;
-  }
-
-  // Create a white and black color if the theme doesn't have one and we are replacing tailwind's default colors
-  if (!Object.keys(theme.shades).some((key) => key === "white") && replace) {
-    colors[`white`] = (opacity) => `rgba(255, 255, 255, ${opacity})`;
-  }
-
-  if (!Object.keys(theme.shades).some((key) => key === "black") && replace) {
-    colors[`black`] = (opacity) => `rgba(0, 0, 0, ${opacity})`;
   }
 
   return colors;
